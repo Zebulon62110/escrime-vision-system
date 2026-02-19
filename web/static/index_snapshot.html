@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Escrime - Snapshot Mode</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 16px;
+            background: #1a1a1a;
+            color: #0f0;
+        }
+
+        #player {
+            width: 800px;
+            height: 450px;
+            background: #000;
+            position: relative;
+            border: 2px solid #0f0;
+        }
+
+        #videoImg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .info {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Escrime - Snapshot Mode (Refreshing Images)</h2>
+    <div id="player">
+        <img id="videoImg" src="" alt="Video Stream">
+    </div>
+    <div class="info">
+        <p>Status: <span id="status">Loading...</span></p>
+        <p>Frames loaded: <span id="frameCount">0</span></p>
+        <p>Last update: <span id="lastUpdate">-</span></p>
+    </div>
+
+    <script>
+        let frameCount = 0;
+        const img = document.getElementById('videoImg');
+        const statusEl = document.getElementById('status');
+        const frameCountEl = document.getElementById('frameCount');
+        const lastUpdateEl = document.getElementById('lastUpdate');
+
+        function updateSnapshot() {
+            const timestamp = Date.now();
+            // Use direct MJPEG server instead of proxy
+            img.src = 'http://localhost:8080/preview?snapshot=1&t=' + timestamp;
+            frameCount++;
+            frameCountEl.textContent = frameCount;
+            lastUpdateEl.textContent = new Date().toLocaleTimeString();
+        }
+
+        img.onload = function () {
+            statusEl.textContent = '✓ Streaming';
+            statusEl.style.color = '#0f0';
+        };
+
+        img.onerror = function () {
+            statusEl.textContent = '✗ Connection error';
+            statusEl.style.color = '#f00';
+        };
+
+        // Update every 100ms (10 fps)
+        setInterval(updateSnapshot, 100);
+        updateSnapshot();
+    </script>
+</body>
+
+</html>

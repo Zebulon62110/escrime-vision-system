@@ -1,0 +1,750 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Escrime - Jetson Control</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 16px
+        }
+
+        #player {
+            width: 800px;
+            height: 450px;
+            background: #000;
+            position: relative;
+        }
+
+        #pisteOverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 3px solid #0f0;
+            box-sizing: border-box;
+            display: none;
+            pointer-events: none;
+            background: transparent;
+            z-index: 20;
+        }
+
+        #pisteOverlay.active {
+            display: block;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                border-color: #0f0;
+                background: transparent;
+            }
+
+            50% {
+                border-color: #0ff;
+                background: transparent;
+            }
+        }
+
+        .controls {
+            margin-top: 12px
+        }
+
+        button {
+            padding: 8px 12px;
+            font-size: 14px;
+            background: #fff;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            border-color: #0f0;
+        }
+
+        button.active {
+            background: #0f0;
+            color: #000;
+            border-color: #0f0;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #drawCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            cursor: crosshair;
+            display: none;
+            z-index: 15;
+        }
+
+        #drawCanvas.active {
+            display: block;
+        }
+
+        #statusPanel {
+            margin-top: 16px;
+            padding: 12px;
+            background: #1a1a1a;
+            border-left: 4px solid #0f0;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #0f0;
+            line-height: 1.6;
+        }
+
+        #statusPanel.error {
+            border-left-color: #f00;
+            color: #f00;
+            background: #2a1a1a;
+        }
+
+        #statusPanel.warning {
+            border-left-color: #ff0;
+            color: #ff0;
+            background: #2a2a1a;
+        }
+
+        .status-line {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin: 4px 0;
+        }
+
+        .status-label {
+            font-weight: bold;
+        }
+
+        .status-value {
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Escrime - Jetson Control</h2>
+    <div id="player">
+        <video id="hlsVideo" controls playsinline
+            style="position:absolute;top:0;left:0;width:100%;height:100%;background:#000"></video>
+        <img id="mjpegImg" src=""
+            style="position:absolute;top:0;left:0;display:block;width:100%;height:100%;object-fit:contain" />
+        <canvas id="drawCanvas"></canvas>
+        <div id="pisteOverlay"></div>
+        <div id="playOverlay"
+            style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#fff;font-size:20px;cursor:pointer;background:rgba(0,0,0,0.7);padding:20px;border-radius:8px;z-index:10;">
+            <p>Click to start playback</p>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button id="drawModeBtn">📐 Draw Piste</button>
+        <button id="validateBtn" style="display:none;">✓ Validate & Start</button>
+        <button id="clearDrawBtn" style="display:none;">✕ Clear</button>
+        <button id="toggleOverlayBtn" style="display:none;">👁️ Hide Piste</button>
+        <button id="resetBtn" style="display:none;">↺ Reset</button>
+    </div>
+
+    <div id="statusPanel">
+        <div class="status-line">
+            <span class="status-label">🔧 Execution Mode:</span>
+            <span class="status-value" id="modeText">Piste not configured</span>
+        </div>
+        <div class="status-line">
+            <span class="status-label">📡 Pipeline:</span>
+            <span class="status-value" id="pipelineText">Initializing...</span>
+        </div>
+        <div class="status-line">
+            <span class="status-label">👥 Fencers Detected:</span>
+            <span class="status-value" id="fencersText">0</span>
+        </div>
+        <div class="status-line">
+            <span class="status-label">⚔️ Guard Validation:</span>
+            <span class="status-value" id="guardValidationText">—</span>
+        </div>
+        <div class="status-line">
+            <span class="status-label">📍 ROI:</span>
+            <span class="status-value" id="roiText">Not set</span>
+        </div>
+    </div>
+
+    <!-- Guard Lines Adjustment Panel -->
+    <div id="guardLinesPanel" style="display:none;margin-top:12px;padding:12px;background:#f0f0f0;border-radius:4px;">
+        <h3 style="margin:0 0 10px 0;font-size:14px;">⚔️ Adjust Guard Lines</h3>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
+            <!-- Left Guard Line -->
+            <div>
+                <label style="display:block;font-size:12px;margin-bottom:5px;">Left Line (5m)</label>
+                <div style="display:flex;gap:5px;">
+                    <button onclick="adjustLine('left', -10)" style="flex:1;padding:5px;font-size:12px;">←
+                        -10px</button>
+                    <button onclick="adjustLine('left', 10)" style="flex:1;padding:5px;font-size:12px;">+10px →</button>
+                </div>
+            </div>
+            <!-- Right Guard Line -->
+            <div>
+                <label style="display:block;font-size:12px;margin-bottom:5px;">Right Line (9m)</label>
+                <div style="display:flex;gap:5px;">
+                    <button onclick="adjustLine('right', -10)" style="flex:1;padding:5px;font-size:12px;">←
+                        -10px</button>
+                    <button onclick="adjustLine('right', 10)" style="flex:1;padding:5px;font-size:12px;">+10px
+                        →</button>
+                </div>
+            </div>
+            <!-- Center Line -->
+            <div>
+                <label style="display:block;font-size:12px;margin-bottom:5px;">Center Line (7m)</label>
+                <div style="display:flex;gap:5px;">
+                    <button onclick="adjustLine('center', -10)" style="flex:1;padding:5px;font-size:12px;">←
+                        -10px</button>
+                    <button onclick="adjustLine('center', 10)" style="flex:1;padding:5px;font-size:12px;">+10px
+                        →</button>
+                </div>
+            </div>
+            <!-- Reset -->
+            <div>
+                <button onclick="resetGuardLines()"
+                    style="width:100%;padding:5px;font-size:12px;background:#faa;color:#fff;border:none;border-radius:3px;">Reset
+                    All</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="errorBox" style="display:none;margin-top:12px;padding:12px;background:#f88;color:#fff;border-radius:4px;">
+    </div>
+    <div id="debugBox"
+        style="margin-top:12px;padding:12px;background:#ddd;color:#000;border-radius:4px;font-size:12px;font-family:monospace;max-height:200px;overflow:auto;">
+    </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.0/dist/hls.min.js"></script>
+    <script>
+        // State machine for execution modes
+        const STATE = {
+            PISTE_NOT_CONFIGURED: 'piste_not_configured',
+            PISTE_DRAWING: 'piste_drawing',
+            PISTE_DRAWN: 'piste_drawn',
+            FENCER_DETECTION: 'fencer_detection'
+        };
+
+        let currentState = STATE.PISTE_NOT_CONFIGURED;
+        let currentROI = null;
+        let fencerCount = 0;
+
+        // Guard line adjustment functions
+        async function adjustLine(lineId, offsetDelta) {
+            try {
+                // Get current adjustments
+                const resp = await fetch('/api/guard-lines-adjustments');
+                const data = await resp.json();
+                const adjustments = data.adjustments;
+
+                // Calculate new offset
+                const currentOffset = adjustments[`${lineId}_offset`] || 0;
+                const newOffset = currentOffset + offsetDelta;
+
+                // Send adjustment to backend
+                const updateResp = await fetch('/api/adjust-guard-line', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        line_id: lineId,
+                        offset_x: newOffset
+                    })
+                });
+
+                const updateData = await updateResp.json();
+                if (updateData.success) {
+                    addDebugLog(`${lineId.toUpperCase()} line adjusted: offset ${newOffset}px`);
+                } else {
+                    addDebugLog(`Error adjusting ${lineId} line: ${updateData.error}`);
+                }
+            } catch (e) {
+                addDebugLog(`Error: ${e}`);
+            }
+        }
+
+        async function resetGuardLines() {
+            try {
+                const resp = await fetch('/api/reset-guard-lines', { method: 'POST' });
+                const data = await resp.json();
+                if (data.success) {
+                    addDebugLog('Guard lines reset to defaults');
+                } else {
+                    addDebugLog(`Error: ${data.error}`);
+                }
+            } catch (e) {
+                addDebugLog(`Error: ${e}`);
+            }
+        }
+
+        function setState(newState) {
+            currentState = newState;
+            updateUI();
+        }
+
+        function updateUI() {
+            const drawModeBtn = document.getElementById('drawModeBtn');
+            const validateBtn = document.getElementById('validateBtn');
+            const clearDrawBtn = document.getElementById('clearDrawBtn');
+            const toggleOverlayBtn = document.getElementById('toggleOverlayBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const statusPanel = document.getElementById('statusPanel');
+            const modeText = document.getElementById('modeText');
+
+            // Reset button visibility
+            drawModeBtn.style.display = 'none';
+            validateBtn.style.display = 'none';
+            clearDrawBtn.style.display = 'none';
+            toggleOverlayBtn.style.display = 'none';
+            resetBtn.style.display = 'none';
+            document.getElementById('guardLinesPanel').style.display = 'none';
+            statusPanel.classList.remove('error', 'warning');
+
+            switch (currentState) {
+                case STATE.PISTE_NOT_CONFIGURED:
+                    modeText.textContent = '⚠️ Piste not configured';
+                    drawModeBtn.style.display = 'inline-block';
+                    drawModeBtn.textContent = '📐 Draw Piste';
+                    statusPanel.classList.add('warning');
+                    break;
+
+                case STATE.PISTE_DRAWING:
+                    modeText.textContent = '✏️ Drawing piste...';
+                    drawModeBtn.style.display = 'inline-block';
+                    drawModeBtn.textContent = '⏹ Cancel';
+                    clearDrawBtn.style.display = 'inline-block';
+                    statusPanel.classList.add('warning');
+                    break;
+
+                case STATE.PISTE_DRAWN:
+                    modeText.textContent = `✓ Piste configured (${currentROI.width}x${currentROI.height}px)`;
+                    validateBtn.style.display = 'inline-block';
+                    clearDrawBtn.style.display = 'inline-block';
+                    break;
+
+                case STATE.FENCER_DETECTION:
+                    modeText.textContent = `🎯 Fencer Detection Active (${fencerCount} detected)`;
+                    toggleOverlayBtn.style.display = 'inline-block';
+                    resetBtn.style.display = 'inline-block';
+                    document.getElementById('guardLinesPanel').style.display = 'block';
+                    break;
+            }
+        }
+
+        function updatePipelineStatus(isRunning) {
+            const pipelineText = document.getElementById('pipelineText');
+            pipelineText.textContent = isRunning ? '🟢 Running' : '🔴 Stopped';
+        }
+
+        function updateFencerCount(count) {
+            fencerCount = count;
+            document.getElementById('fencersText').textContent = count;
+            if (currentState === STATE.FENCER_DETECTION) {
+                updateUI();
+            }
+        }
+
+        function updateROIDisplay(roi) {
+            if (roi) {
+                document.getElementById('roiText').textContent =
+                    `x: ${roi.x1}-${roi.x2}, y: ${roi.y1}-${roi.y2}`;
+            } else {
+                document.getElementById('roiText').textContent = 'Not set';
+            }
+        }
+
+        async function updateGuardValidation() {
+            try {
+                const res = await fetch('/api/guard-validation');
+                const data = await res.json();
+                if (data.success) {
+                    const f1 = data.fencer_1_on_guard ? '✓ F1' : '✗ F1';
+                    const f2 = data.fencer_2_on_guard ? '✓ F2' : '✗ F2';
+                    const status = `${f1} | ${f2}`;
+                    document.getElementById('guardValidationText').textContent = status;
+                } else {
+                    document.getElementById('guardValidationText').textContent = '—';
+                }
+            } catch (e) {
+                console.error('Error fetching guard validation:', e);
+                document.getElementById('guardValidationText').textContent = '—';
+            }
+        }
+
+        function addDebugLog(msg) {
+            const box = document.getElementById('debugBox');
+            const timestamp = new Date().toLocaleTimeString();
+            box.innerHTML = `[${timestamp}] ${msg}<br/>` + box.innerHTML;
+            if ((box.innerHTML.match(/<br\/>/g) || []).length > 20) {
+                box.innerHTML = box.innerHTML.substring(0, box.innerHTML.lastIndexOf('<br/>'));
+            }
+        }
+
+        async function init() {
+            addDebugLog('Page initialized');
+            const res = await fetch('/api/status');
+            const cfg = await res.json();
+            addDebugLog(`Config loaded: mode=${cfg.mode}`);
+            document.getElementById('modeText').textContent = cfg.mode;
+
+            const hlsUrl = cfg.stream_hls_url;
+            const mjpegUrl = cfg.stream_mjpeg_url;
+            addDebugLog(`HLS URL: ${hlsUrl}`);
+            addDebugLog(`MJPEG URL: ${mjpegUrl}`);
+
+            const video = document.getElementById('hlsVideo');
+            const img = document.getElementById('mjpegImg');
+
+            // Hide video element, use MJPEG stream directly
+            video.style.display = 'none';
+
+            // Set MJPEG stream URL (via proxy to avoid CORS issues)
+            img.src = '/proxy/mjpeg';
+
+            addDebugLog('Loading MJPEG stream via proxy');
+
+            img.onload = function () {
+                addDebugLog('✓ MJPEG stream loaded successfully');
+            };
+
+            img.onerror = function () {
+                addDebugLog('✗ ERROR loading MJPEG stream');
+            };
+
+            // Setup canvas for drawing
+            const canvas = document.getElementById('drawCanvas');
+            const player = document.getElementById('player');
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = player.clientWidth;
+                canvas.height = player.clientHeight;
+                addDebugLog(`Canvas resized to ${canvas.width}x${canvas.height}`);
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            let isDrawing = false;
+            let startX = 0, startY = 0;
+            let currentPisteROI = null;
+
+            const VIDEO_WIDTH = 1280;
+            const VIDEO_HEIGHT = 720;
+
+            function drawRect(x1, y1, x2, y2, color = '#0f0') {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Draw rectangle border only
+                ctx.beginPath();
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 3;
+                ctx.rect(x1, y1, x2 - x1, y2 - y1);
+                ctx.stroke();
+
+                // Draw crosshairs
+                ctx.beginPath();
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 1;
+                ctx.setLineDash([5, 5]);
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            canvas.addEventListener('mousedown', (e) => {
+                if (!canvas.classList.contains('active')) return;
+
+                const rect = canvas.getBoundingClientRect();
+                startX = e.clientX - rect.left;
+                startY = e.clientY - rect.top;
+                isDrawing = true;
+                addDebugLog(`Drawing started at (${startX.toFixed(0)}, ${startY.toFixed(0)})`);
+            });
+
+            canvas.addEventListener('mousemove', (e) => {
+                if (!isDrawing) return;
+
+                const rect = canvas.getBoundingClientRect();
+                const currentX = e.clientX - rect.left;
+                const currentY = e.clientY - rect.top;
+
+                drawRect(startX, startY, currentX, currentY);
+            });
+
+            canvas.addEventListener('mouseup', async (e) => {
+                if (!isDrawing) return;
+                isDrawing = false;
+
+                const rect = canvas.getBoundingClientRect();
+                const endX = e.clientX - rect.left;
+                const endY = e.clientY - rect.top;
+
+                // Convert from canvas coordinates to video coordinates
+                const canvasWidth = canvas.width;
+                const canvasHeight = canvas.height;
+
+                // Debug logs
+                addDebugLog(`MouseUp: startX=${startX.toFixed(0)}, endX=${endX.toFixed(0)}, canvasWidth=${canvasWidth}`);
+                addDebugLog(`MouseUp: startY=${startY.toFixed(0)}, endY=${endY.toFixed(0)}, canvasHeight=${canvasHeight}`);
+
+                const x1_video = Math.round((Math.min(startX, endX) / canvasWidth) * VIDEO_WIDTH);
+                const y1_video = Math.round((Math.min(startY, endY) / canvasHeight) * VIDEO_HEIGHT);
+                const x2_video = Math.round((Math.max(startX, endX) / canvasWidth) * VIDEO_WIDTH);
+                const y2_video = Math.round((Math.max(startY, endY) / canvasHeight) * VIDEO_HEIGHT);
+
+                addDebugLog(`Calculated video coords: x1=${x1_video}, x2=${x2_video}, y1=${y1_video}, y2=${y2_video}`);
+
+                currentPisteROI = { x1: x1_video, y1: y1_video, x2: x2_video, y2: y2_video };
+                currentROI = currentPisteROI; // Update global state variable
+
+                addDebugLog(`Rectangle drawn: x=${x1_video}-${x2_video}, y=${y1_video}-${y2_video}`);
+
+                // Update UI state to PISTE_DRAWN instead of showing validate button
+                setState(STATE.PISTE_DRAWN);
+                updateROIDisplay(currentROI);
+
+                // Update overlay to show selection
+                const overlay = document.getElementById('pisteOverlay');
+                const topPercent = (currentPisteROI.y1 / VIDEO_HEIGHT) * 100;
+                const leftPercent = (currentPisteROI.x1 / VIDEO_WIDTH) * 100;
+                const heightPercent = ((currentPisteROI.y2 - currentPisteROI.y1) / VIDEO_HEIGHT) * 100;
+                const widthPercent = ((currentPisteROI.x2 - currentPisteROI.x1) / VIDEO_WIDTH) * 100;
+
+                overlay.style.top = topPercent + '%';
+                overlay.style.left = leftPercent + '%';
+                overlay.style.height = heightPercent + '%';
+                overlay.style.width = widthPercent + '%';
+                overlay.classList.add('active');
+
+                addDebugLog(`Piste drawn. Click "✓ Validate" to activate fencer detection`);
+            });
+
+            // Draw mode button
+            document.getElementById('drawModeBtn').addEventListener('click', () => {
+                const hasActive = canvas.classList.contains('active');
+
+                if (hasActive) {
+                    // Disable draw mode 
+                    canvas.classList.remove('active');
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    setState(STATE.PISTE_NOT_CONFIGURED);
+                    currentPisteROI = null;
+                    addDebugLog('Draw mode canceled');
+                } else {
+                    // Enable draw mode
+                    canvas.classList.add('active');
+                    setState(STATE.PISTE_DRAWING);
+                    addDebugLog('Draw mode enabled - click and drag to draw rectangle');
+                }
+            });
+
+            // Clear button
+            document.getElementById('clearDrawBtn').addEventListener('click', () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                currentPisteROI = null;
+                // Stay in PISTE_DRAWING mode to allow redrawing
+                addDebugLog('Drawing cleared - draw a new rectangle');
+            });
+
+            // Validate button - Send ROI and activate fencer detection
+            document.getElementById('validateBtn').addEventListener('click', async () => {
+                if (!currentPisteROI) {
+                    addDebugLog('No ROI to validate');
+                    return;
+                }
+
+                addDebugLog(`Sending ROI to server: x1=${currentPisteROI.x1}, y1=${currentPisteROI.y1}, x2=${currentPisteROI.x2}, y2=${currentPisteROI.y2}`);
+
+                try {
+                    const res = await fetch('/api/select-roi', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(currentPisteROI)
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        addDebugLog(`ROI validated and saved: ${data.width}x${data.height}px`);
+
+                        // Update currentROI with width/height from server response
+                        currentROI.width = data.width;
+                        currentROI.height = data.height;
+
+                        // Ensure piste overlay is visible (guard lines should be shown immediately)
+                        document.getElementById('pisteOverlay').classList.add('active');
+                        document.getElementById('toggleOverlayBtn').textContent = '👁️ Hide Piste';
+
+                        // Transition to fencer detection mode
+                        canvas.classList.remove('active');
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        setState(STATE.FENCER_DETECTION);
+                        updateROIDisplay(currentROI);
+
+                        // Start polling for fencer count
+                        startFencerPolling();
+                    } else {
+                        addDebugLog(`Failed to validate ROI: ${data.error}`);
+                    }
+                } catch (e) {
+                    addDebugLog(`Error validating ROI: ${e}`);
+                }
+            });
+
+            // Toggle overlay button - Show/hide piste overlay
+            document.getElementById('toggleOverlayBtn').addEventListener('click', async () => {
+                const overlay = document.getElementById('pisteOverlay');
+                const btn = document.getElementById('toggleOverlayBtn');
+
+                try {
+                    // Call backend API to toggle visibility
+                    const response = await fetch('/api/toggle-piste-visibility', { method: 'POST' });
+                    const data = await response.json();
+
+                    if (data.success) {
+                        if (data.piste_visible) {
+                            overlay.classList.add('active');
+                            btn.textContent = '👁️ Hide Piste';
+                            addDebugLog('Piste overlay shown');
+                        } else {
+                            overlay.classList.remove('active');
+                            btn.textContent = '👁️ Show Piste';
+                            addDebugLog('Piste overlay hidden');
+                        }
+                    }
+                } catch (e) {
+                    addDebugLog(`Warning: Failed to toggle piste visibility: ${e}`);
+                    // Fallback to client-side toggle
+                    if (overlay.classList.contains('active')) {
+                        overlay.classList.remove('active');
+                        btn.textContent = '👁️ Show Piste';
+                        addDebugLog('Piste overlay hidden');
+                    } else {
+                        overlay.classList.add('active');
+                        btn.textContent = '👁️ Hide Piste';
+                        addDebugLog('Piste overlay shown');
+                    }
+                }
+            });
+
+            // Reset button - Clear ROI and return to initial state
+            document.getElementById('resetBtn').addEventListener('click', async () => {
+                try {
+                    await fetch('/api/clear-roi', { method: 'POST' });
+                } catch (e) {
+                    addDebugLog(`Warning: clear-roi not yet implemented on backend: ${e}`);
+                }
+
+                // Clear UI state
+                currentPisteROI = null;
+                currentROI = null;
+                fencerCount = 0;
+                canvas.classList.remove('active');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                document.getElementById('pisteOverlay').classList.remove('active');
+
+                // Reset piste visibility to visible (true)
+                try {
+                    const visResp = await fetch('/api/piste-visibility');
+                    const visData = await visResp.json();
+                    if (!visData.piste_visible) {
+                        // If hidden, toggle it back to visible
+                        await fetch('/api/toggle-piste-visibility', { method: 'POST' });
+                        document.getElementById('toggleOverlayBtn').textContent = '👁️ Hide Piste';
+                        document.getElementById('pisteOverlay').classList.add('active');
+                    }
+                } catch (e) {
+                    addDebugLog(`Warning: Failed to reset piste visibility: ${e}`);
+                }
+
+                // Reset guard line adjustments
+                try {
+                    await fetch('/api/reset-guard-lines', { method: 'POST' });
+                } catch (e) {
+                    addDebugLog(`Warning: Failed to reset guard lines: ${e}`);
+                }
+
+                // Stop polling if running
+                if (window.fencerPollingInterval) {
+                    clearInterval(window.fencerPollingInterval);
+                    window.fencerPollingInterval = null;
+                }
+
+                setState(STATE.PISTE_NOT_CONFIGURED);
+                updateROIDisplay(null);
+                addDebugLog('System reset - ready for new piste selection');
+            });
+
+            // Play overlay behavior: unmute and play
+            document.getElementById('playOverlay').addEventListener('click', () => {
+                addDebugLog('Play overlay clicked, starting playback');
+                const v = document.getElementById('hlsVideo');
+                v.muted = false;
+                v.play().catch((e) => { addDebugLog(`Manual play failed: ${e}`); });
+                document.getElementById('playOverlay').style.display = 'none';
+            });
+
+            // Initialize UI state
+            setState(STATE.PISTE_NOT_CONFIGURED);
+            updatePipelineStatus(true);
+            updateROIDisplay(null);
+
+            // Initialize piste visibility button state from server
+            (async () => {
+                try {
+                    const resp = await fetch('/api/piste-visibility');
+                    const data = await resp.json();
+                    const btn = document.getElementById('toggleOverlayBtn');
+                    if (data.piste_visible) {
+                        document.getElementById('pisteOverlay').classList.add('active');
+                        btn.textContent = '👁️ Hide Piste';
+                    } else {
+                        document.getElementById('pisteOverlay').classList.remove('active');
+                        btn.textContent = '👁️ Show Piste';
+                    }
+                } catch (e) {
+                    addDebugLog(`Warning: Failed to initialize piste visibility: ${e}`);
+                }
+            })();
+
+            addDebugLog('Init complete - ready for manual piste selection');
+        }
+
+        // Polling function to fetch real-time fencer count
+        function startFencerPolling() {
+            // Stop any existing polling
+            if (window.fencerPollingInterval) {
+                clearInterval(window.fencerPollingInterval);
+            }
+
+            window.fencerPollingInterval = setInterval(async () => {
+                try {
+                    const res = await fetch('/api/fencer-count');
+                    const data = await res.json();
+
+                    if (data.fencer_count !== undefined) {
+                        updateFencerCount(data.fencer_count);
+                    }
+                } catch (e) {
+                    // Silently fail on polling errors to avoid log spam
+                }
+
+                // Also update guard validation status
+                await updateGuardValidation();
+            }, 500); // Update every 500ms
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

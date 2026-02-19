@@ -16,8 +16,9 @@ class SoftwareEncoder(Encoder):
                 "-i","-",
                 "-c:v","libx264",
                 "-preset","veryfast",
-                "-f","rtsp",
-                "rtsp://localhost:8554/live"
+                    "-f","rtsp",
+                    "-rtsp_transport","tcp",
+                    "rtsp://localhost:8554/live"
             ],
             stdin=subprocess.PIPE
         )

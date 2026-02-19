@@ -1,0 +1,329 @@
+2026/02/18 23:24:41 INF MediaMTX v1.16.1, linux, amd64
+2026/02/18 23:24:41 INF configuration loaded from /home/seb/escrime-vision-system/mediamtx.yml
+2026/02/18 23:24:41 INF [RTSP] listener opened on :8554 (TCP/RTSP), :8000 (UDP/RTP), :8001 (UDP/RTCP)
+2026/02/18 23:24:41 INF [RTMP] listener opened on :1935
+2026/02/18 23:24:41 INF [HLS] listener opened on :8888
+2026/02/18 23:24:41 INF [WebRTC] listener opened on :8889 (HTTP), :8189 (ICE/UDP)
+2026/02/18 23:24:41 INF [SRT] listener opened on :8890 (UDP)
+2026/02/18 23:24:44 INF reloading configuration (file changed)
+2026/02/18 23:24:45 INF [RTMP] [conn [::1]:49088] opened
+2026/02/18 23:24:45 INF [RTMP] [conn [::1]:49088] closed: invalid rtmp version (71)
+2026/02/18 23:24:45 INF [RTMP] [conn [::1]:49104] opened
+2026/02/18 23:24:45 INF [RTMP] [conn [::1]:49104] closed: invalid rtmp version (71)
+2026/02/18 23:24:45 INF [RTMP] [conn [::1]:49110] opened
+2026/02/18 23:24:45 INF [RTMP] [conn [::1]:49110] closed: invalid rtmp version (71)
+2026/02/18 23:24:45 INF [RTMP] [conn [::1]:49124] opened
+2026/02/18 23:24:45 INF [RTMP] [conn [::1]:49124] closed: invalid rtmp version (71)
+2026/02/18 23:24:50 INF [RTMP] [conn [::1]:56890] opened
+2026/02/18 23:24:50 INF [RTMP] [conn [::1]:56890] closed: invalid rtmp version (71)
+2026/02/18 23:24:50 INF [RTMP] [conn [::1]:56896] opened
+2026/02/18 23:25:00 INF [RTSP] [conn 127.0.0.1:39512] opened
+2026/02/18 23:25:00 INF [RTSP] [session 97b3b0f9] created by 127.0.0.1:39512
+2026/02/18 23:25:00 INF [RTSP] [session 97b3b0f9] is publishing to path 'live'
+2026/02/18 23:25:00 INF [path live] stream is available and online, 1 track (H264)
+2026/02/18 23:25:00 INF [path live] RTP packets are too big, remuxing them into smaller ones
+2026/02/18 23:25:00 INF [RTMP] [conn [::1]:56896] closed: read tcp [::1]:1935->[::1]:56896: i/o timeout
+2026/02/18 23:27:17 INF [RTSP] [session 97b3b0f9] destroyed: torn down by 127.0.0.1:39512
+2026/02/18 23:27:17 INF [RTSP] [conn 127.0.0.1:39512] closed: EOF
+2026/02/18 23:27:18 INF [RTSP] [conn 127.0.0.1:58292] opened
+2026/02/18 23:27:18 INF [RTSP] [session 54ae7e2b] created by 127.0.0.1:58292
+2026/02/18 23:27:18 INF [RTSP] [session 54ae7e2b] is publishing to path 'live'
+2026/02/18 23:27:18 INF [path live] stream is available and online, 1 track (H264)
+2026/02/18 23:27:18 INF [path live] RTP packets are too big, remuxing them into smaller ones
+2026/02/18 23:27:31 INF [RTSP] [session 54ae7e2b] destroyed: torn down by 127.0.0.1:58292
+2026/02/18 23:27:31 INF [RTSP] [conn 127.0.0.1:58292] closed: EOF
+2026/02/18 23:27:32 INF [RTSP] [conn 127.0.0.1:37630] opened
+2026/02/18 23:27:32 INF [RTSP] [session e5201011] created by 127.0.0.1:37630
+2026/02/18 23:27:32 INF [RTSP] [session e5201011] is publishing to path 'live'
+2026/02/18 23:27:32 INF [path live] stream is available and online, 1 track (H264)
+2026/02/18 23:27:32 INF [path live] RTP packets are too big, remuxing them into smaller ones
+2026/02/18 23:30:27 INF [RTSP] [session e5201011] destroyed: torn down by 127.0.0.1:37630
+2026/02/18 23:30:27 INF [RTSP] [conn 127.0.0.1:37630] closed: EOF
+2026/02/18 23:37:37 INF [RTSP] [conn 127.0.0.1:35984] opened
+2026/02/18 23:37:37 INF [RTSP] [session a5840f67] created by 127.0.0.1:35984
+2026/02/18 23:37:37 INF [RTSP] [session a5840f67] is publishing to path 'live'
+2026/02/18 23:37:37 INF [path live] stream is available and online, 1 track (H264)
+2026/02/18 23:37:37 INF [path live] RTP packets are too big, remuxing them into smaller ones
+2026/02/18 23:37:40 INF [RTSP] [conn 127.0.0.1:36000] opened
+2026/02/18 23:37:40 INF [RTSP] [session c21c45b8] created by 127.0.0.1:36000
+2026/02/18 23:37:40 INF [RTSP] [session c21c45b8] is reading from path 'live', with UDP, 1 track (H264)
+2026/02/18 23:37:40 INF [RTSP] [session c21c45b8] destroyed: torn down by 127.0.0.1:36000
+2026/02/18 23:37:40 INF [RTSP] [conn 127.0.0.1:36000] closed: EOF
+2026/02/18 23:37:58 INF [RTSP] [conn 127.0.0.1:59942] opened
+2026/02/18 23:37:58 INF [RTSP] [session c96556e8] created by 127.0.0.1:59942
+2026/02/18 23:37:58 INF [RTSP] [session c96556e8] is reading from path 'live', with UDP, 1 track (H264)
+2026/02/18 23:37:59 INF [RTSP] [session c96556e8] destroyed: torn down by 127.0.0.1:59942
+2026/02/18 23:37:59 INF [RTSP] [conn 127.0.0.1:59942] closed: EOF
+2026/02/18 23:40:27 INF [RTSP] [session a5840f67] destroyed: torn down by 127.0.0.1:35984
+2026/02/18 23:40:27 INF [RTSP] [conn 127.0.0.1:35984] closed: EOF
+2026/02/18 23:42:57 INF [HLS] [muxer live] created (requested by [::1]:59510)
+2026/02/18 23:42:57 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:45:21 INF [HLS] [muxer live] created (requested by [::1]:43292)
+2026/02/18 23:45:21 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:45:42 INF [HLS] [muxer live] created (requested by [::1]:43292)
+2026/02/18 23:45:42 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:47:44 INF [HLS] [muxer live] created (requested by 127.0.0.1:38450)
+2026/02/18 23:47:44 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:48:01 INF [RTSP] [conn 127.0.0.1:57294] opened
+2026/02/18 23:48:01 INF [RTSP] [session 1c94e02f] created by 127.0.0.1:57294
+2026/02/18 23:48:01 INF [RTSP] [session 1c94e02f] is publishing to path 'live'
+2026/02/18 23:48:01 INF [path live] stream is available and online, 1 track (H264)
+2026/02/18 23:48:01 INF [path live] RTP packets are too big, remuxing them into smaller ones
+2026/02/18 23:48:07 INF [HLS] [muxer live] created (requested by 127.0.0.1:37648)
+2026/02/18 23:48:07 INF [HLS] [muxer live] is converting into HLS, 1 track (H264)
+2026/02/18 23:51:11 INF [RTSP] [session 1c94e02f] destroyed: torn down by 127.0.0.1:57294
+2026/02/18 23:51:11 INF [RTSP] [conn 127.0.0.1:57294] closed: EOF
+2026/02/18 23:51:11 INF [HLS] [muxer live] destroyed: terminated
+2026/02/18 23:51:11 INF [HLS] [muxer live] created (requested by [::1]:52688)
+2026/02/18 23:51:11 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:51:11 INF [HLS] [muxer live] created (requested by [::1]:52722)
+2026/02/18 23:51:11 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:51:11 INF [HLS] [muxer live] created (requested by [::1]:52706)
+2026/02/18 23:51:11 INF [HLS] [muxer live] destroyed: terminated
+2026/02/18 23:51:11 INF [HLS] [muxer live] created (requested by [::1]:52706)
+2026/02/18 23:51:11 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:51:11 INF [HLS] [muxer live] created (requested by [::1]:52706)
+2026/02/18 23:51:11 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:51:11 INF [HLS] [muxer live] created (requested by [::1]:52706)
+2026/02/18 23:51:11 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:51:11 INF [HLS] [muxer live] created (requested by [::1]:52706)
+2026/02/18 23:51:11 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:51:11 INF [HLS] [muxer live] created (requested by [::1]:52706)
+2026/02/18 23:51:11 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:51:11 INF [HLS] [muxer live] created (requested by [::1]:52706)
+2026/02/18 23:51:11 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:51:49 INF [HLS] [muxer live] created (requested by [::1]:37386)
+2026/02/18 23:51:49 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:52:02 INF [HLS] [muxer live] created (requested by [::1]:37386)
+2026/02/18 23:52:02 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:52:21 INF [HLS] [muxer live] created (requested by [::1]:37386)
+2026/02/18 23:52:21 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:52:37 INF [HLS] [muxer live] created (requested by [::1]:37386)
+2026/02/18 23:52:37 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:52:53 INF [HLS] [muxer live] created (requested by [::1]:37386)
+2026/02/18 23:52:53 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:53:07 INF [HLS] [muxer live] created (requested by [::1]:37386)
+2026/02/18 23:53:07 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:54:14 INF [HLS] [muxer live] created (requested by [::1]:47036)
+2026/02/18 23:54:14 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:55:31 INF [HLS] [muxer live] created (requested by [::1]:41170)
+2026/02/18 23:55:31 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:55:32 INF [HLS] [muxer live] created (requested by [::1]:41170)
+2026/02/18 23:55:32 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:55:33 INF [HLS] [muxer live] created (requested by [::1]:41170)
+2026/02/18 23:55:33 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:55:45 INF [HLS] [muxer live] created (requested by [::1]:41170)
+2026/02/18 23:55:45 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:55:51 INF [HLS] [muxer live] created (requested by [::1]:41170)
+2026/02/18 23:55:51 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:56:58 INF [HLS] [muxer live] created (requested by [::1]:45672)
+2026/02/18 23:56:58 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:57:26 INF [HLS] [muxer live] created (requested by [::1]:44328)
+2026/02/18 23:57:26 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/18 23:58:32 INF [RTSP] [conn 127.0.0.1:35472] opened
+2026/02/18 23:58:32 INF [RTSP] [session e91d94f3] created by 127.0.0.1:35472
+2026/02/18 23:58:32 INF [RTSP] [session e91d94f3] is publishing to path 'live'
+2026/02/18 23:58:32 INF [path live] stream is available and online, 1 track (H264)
+2026/02/18 23:58:32 INF [path live] RTP packets are too big, remuxing them into smaller ones
+2026/02/18 23:58:36 INF [HLS] [muxer live] created (requested by 127.0.0.1:59974)
+2026/02/18 23:58:36 INF [HLS] [muxer live] is converting into HLS, 1 track (H264)
+2026/02/18 23:59:37 INF [HLS] [muxer live] destroyed: not used anymore
+2026/02/19 00:01:11 INF [HLS] [muxer live] created (requested by 127.0.0.1:54146)
+2026/02/19 00:01:11 INF [HLS] [muxer live] is converting into HLS, 1 track (H264)
+2026/02/19 00:01:47 INF [RTSP] [session e91d94f3] destroyed: torn down by 127.0.0.1:35472
+2026/02/19 00:01:47 INF [HLS] [muxer live] destroyed: terminated
+2026/02/19 00:01:47 INF [RTSP] [conn 127.0.0.1:35472] closed: EOF
+2026/02/19 00:01:47 INF [HLS] [muxer live] created (requested by 127.0.0.1:47296)
+2026/02/19 00:01:47 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:01:47 INF [HLS] [muxer live] created (requested by 127.0.0.1:47286)
+2026/02/19 00:01:47 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:01:48 INF [HLS] [muxer live] created (requested by 127.0.0.1:47300)
+2026/02/19 00:01:48 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:01:50 INF [HLS] [muxer live] created (requested by 127.0.0.1:54868)
+2026/02/19 00:01:50 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:01:51 INF [HLS] [muxer live] created (requested by 127.0.0.1:54882)
+2026/02/19 00:01:51 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:01:52 INF [HLS] [muxer live] created (requested by 127.0.0.1:54884)
+2026/02/19 00:01:52 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:01:54 INF [HLS] [muxer live] created (requested by 127.0.0.1:54886)
+2026/02/19 00:01:54 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:03:00 INF [HLS] [muxer live] created (requested by 127.0.0.1:53198)
+2026/02/19 00:03:00 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:03:01 INF [HLS] [muxer live] created (requested by 127.0.0.1:53200)
+2026/02/19 00:03:01 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:03:13 INF [HLS] [muxer live] created (requested by 127.0.0.1:44592)
+2026/02/19 00:03:13 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:03:15 INF [HLS] [muxer live] created (requested by 127.0.0.1:58118)
+2026/02/19 00:03:15 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:03:52 INF [RTSP] [conn 127.0.0.1:48212] opened
+2026/02/19 00:03:52 INF [RTSP] [session b9cee0f7] created by 127.0.0.1:48212
+2026/02/19 00:03:52 INF [RTSP] [session b9cee0f7] is publishing to path 'live'
+2026/02/19 00:03:52 INF [path live] stream is available and online, 1 track (H264)
+2026/02/19 00:03:52 INF [path live] RTP packets are too big, remuxing them into smaller ones
+2026/02/19 00:04:16 INF [HLS] [muxer live] created (requested by 127.0.0.1:45160)
+2026/02/19 00:04:16 INF [HLS] [muxer live] is converting into HLS, 1 track (H264)
+2026/02/19 00:07:00 INF [RTSP] [session b9cee0f7] destroyed: torn down by 127.0.0.1:48212
+2026/02/19 00:07:00 INF [RTSP] [conn 127.0.0.1:48212] closed: EOF
+2026/02/19 00:07:00 INF [HLS] [muxer live] destroyed: terminated
+2026/02/19 00:07:00 INF [HLS] [muxer live] created (requested by 127.0.0.1:48344)
+2026/02/19 00:07:00 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:07:01 INF [HLS] [muxer live] created (requested by 127.0.0.1:48356)
+2026/02/19 00:07:01 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:07:03 INF [HLS] [muxer live] created (requested by 127.0.0.1:48362)
+2026/02/19 00:07:03 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:15:02 INF [HLS] [muxer live] created (requested by 127.0.0.1:42196)
+2026/02/19 00:15:02 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:15:03 INF [HLS] [muxer live] created (requested by 127.0.0.1:42210)
+2026/02/19 00:15:03 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:15:52 INF [HLS] [muxer live] created (requested by 127.0.0.1:51424)
+2026/02/19 00:15:52 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:15:53 INF [HLS] [muxer live] created (requested by 127.0.0.1:51438)
+2026/02/19 00:15:53 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:16:16 INF [HLS] [muxer live] created (requested by 127.0.0.1:56436)
+2026/02/19 00:16:16 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:16:17 INF [HLS] [muxer live] created (requested by 127.0.0.1:56448)
+2026/02/19 00:16:17 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:16:36 INF [HLS] [muxer live] created (requested by 127.0.0.1:36470)
+2026/02/19 00:16:36 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:16:37 INF [HLS] [muxer live] created (requested by 127.0.0.1:36478)
+2026/02/19 00:16:37 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:16:49 INF [HLS] [muxer live] created (requested by 127.0.0.1:59878)
+2026/02/19 00:16:49 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:16:50 INF [HLS] [muxer live] created (requested by 127.0.0.1:59890)
+2026/02/19 00:16:50 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:18:00 INF [HLS] [muxer live] created (requested by 127.0.0.1:53952)
+2026/02/19 00:18:00 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:18:01 INF [HLS] [muxer live] created (requested by 127.0.0.1:54458)
+2026/02/19 00:18:01 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 00:21:03 INF [RTSP] [conn 127.0.0.1:40800] opened
+2026/02/19 00:21:03 INF [RTSP] [session f1fcad77] created by 127.0.0.1:40800
+2026/02/19 00:21:03 INF [RTSP] [session f1fcad77] is publishing to path 'live'
+2026/02/19 00:21:03 INF [path live] stream is available and online, 1 track (H264)
+2026/02/19 00:21:06 INF [path live] RTP packets are too big, remuxing them into smaller ones
+2026/02/19 00:21:18 INF [RTSP] [conn 127.0.0.1:45338] opened
+2026/02/19 00:21:18 INF [RTSP] [session faa33009] created by 127.0.0.1:45338
+2026/02/19 00:21:18 INF [RTSP] [session faa33009] is reading from path 'live', with TCP, 1 track (H264)
+2026/02/19 00:21:20 INF [RTSP] [session faa33009] destroyed: torn down by 127.0.0.1:45338
+2026/02/19 00:21:20 INF [RTSP] [conn 127.0.0.1:45338] closed: EOF
+2026/02/19 00:21:24 INF [HLS] [muxer live] created (requested by 127.0.0.1:35606)
+2026/02/19 00:21:24 INF [HLS] [muxer live] is converting into HLS, 1 track (H264)
+2026/02/19 01:02:40 INF [HLS] [muxer live] destroyed: not used anymore
+2026/02/19 01:02:42 INF [HLS] [muxer live] created (requested by 127.0.0.1:47238)
+2026/02/19 01:02:42 INF [HLS] [muxer live] is converting into HLS, 1 track (H264)
+2026/02/19 07:24:45 INF [HLS] [muxer live] destroyed: not used anymore
+2026/02/19 09:11:18 INF [RTSP] [session f1fcad77] destroyed: torn down by 127.0.0.1:40800
+2026/02/19 09:11:18 INF [RTSP] [conn 127.0.0.1:40800] closed: EOF
+2026/02/19 09:16:08 INF [RTSP] [conn 127.0.0.1:58790] opened
+2026/02/19 09:16:08 INF [RTSP] [session 37a680e2] created by 127.0.0.1:58790
+2026/02/19 09:16:08 INF [RTSP] [session 37a680e2] is publishing to path 'live'
+2026/02/19 09:16:08 INF [path live] stream is available and online, 1 track (H264)
+2026/02/19 09:16:11 INF [path live] RTP packets are too big, remuxing them into smaller ones
+2026/02/19 09:16:39 INF [HLS] [muxer live] created (requested by 127.0.0.1:34814)
+2026/02/19 09:16:39 INF [HLS] [muxer live] is converting into HLS, 1 track (H264)
+2026/02/19 09:30:32 INF [RTSP] [session 37a680e2] destroyed: torn down by 127.0.0.1:58790
+2026/02/19 09:30:32 INF [RTSP] [conn 127.0.0.1:58790] closed: EOF
+2026/02/19 09:30:32 INF [HLS] [muxer live] destroyed: terminated
+2026/02/19 09:30:32 INF [HLS] [muxer live] created (requested by 127.0.0.1:40870)
+2026/02/19 09:30:32 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 09:30:34 INF [HLS] [muxer live] created (requested by 127.0.0.1:40336)
+2026/02/19 09:30:34 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 09:30:37 INF [HLS] [muxer live] created (requested by 127.0.0.1:40342)
+2026/02/19 09:30:37 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 09:33:02 INF [HLS] [muxer live] created (requested by 127.0.0.1:56116)
+2026/02/19 09:33:02 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 09:33:03 INF [HLS] [muxer live] created (requested by 127.0.0.1:41678)
+2026/02/19 09:33:03 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 09:44:17 INF [HLS] [muxer live] created (requested by 127.0.0.1:42356)
+2026/02/19 09:44:17 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 09:44:18 INF [HLS] [muxer live] created (requested by 127.0.0.1:42362)
+2026/02/19 09:44:18 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 09:48:27 INF [HLS] [muxer live] created (requested by 127.0.0.1:54068)
+2026/02/19 09:48:27 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 09:48:28 INF [HLS] [muxer live] created (requested by 127.0.0.1:54076)
+2026/02/19 09:48:28 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 09:51:01 INF [HLS] [muxer live] created (requested by 127.0.0.1:45004)
+2026/02/19 09:51:01 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 09:51:02 INF [HLS] [muxer live] created (requested by 127.0.0.1:45018)
+2026/02/19 09:51:02 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 09:51:41 INF [HLS] [muxer live] created (requested by 127.0.0.1:49162)
+2026/02/19 09:51:41 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 09:51:42 INF [HLS] [muxer live] created (requested by 127.0.0.1:49176)
+2026/02/19 09:51:42 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 09:53:50 INF [HLS] [muxer live] created (requested by 127.0.0.1:58074)
+2026/02/19 09:53:50 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 09:53:51 INF [HLS] [muxer live] created (requested by 127.0.0.1:58082)
+2026/02/19 09:53:51 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 10:06:07 INF [HLS] [muxer live] created (requested by 127.0.0.1:54824)
+2026/02/19 10:06:07 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 10:06:08 INF [HLS] [muxer live] created (requested by 127.0.0.1:54832)
+2026/02/19 10:06:08 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 10:12:46 INF [HLS] [muxer live] created (requested by 127.0.0.1:55636)
+2026/02/19 10:12:46 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 10:12:47 INF [HLS] [muxer live] created (requested by 127.0.0.1:55638)
+2026/02/19 10:12:47 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 10:13:01 INF [HLS] [muxer live] created (requested by 127.0.0.1:42172)
+2026/02/19 10:13:01 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 10:13:02 INF [HLS] [muxer live] created (requested by 127.0.0.1:42184)
+2026/02/19 10:13:02 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 10:37:09 INF [HLS] [muxer live] created (requested by 127.0.0.1:55328)
+2026/02/19 10:37:09 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 10:37:10 INF [HLS] [muxer live] created (requested by 127.0.0.1:55332)
+2026/02/19 10:37:10 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 10:48:55 INF [HLS] [muxer live] created (requested by 127.0.0.1:36670)
+2026/02/19 10:48:55 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 10:48:56 INF [HLS] [muxer live] created (requested by 127.0.0.1:36686)
+2026/02/19 10:48:56 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 11:11:53 INF [HLS] [muxer live] created (requested by 127.0.0.1:33288)
+2026/02/19 11:11:53 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 11:11:54 INF [HLS] [muxer live] created (requested by 127.0.0.1:58080)
+2026/02/19 11:11:54 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 11:18:35 INF [HLS] [muxer live] created (requested by 127.0.0.1:36394)
+2026/02/19 11:18:35 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 11:18:36 INF [HLS] [muxer live] created (requested by 127.0.0.1:36396)
+2026/02/19 11:18:36 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 11:22:45 INF [HLS] [muxer live] created (requested by 127.0.0.1:45364)
+2026/02/19 11:22:45 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 11:22:46 INF [HLS] [muxer live] created (requested by 127.0.0.1:45380)
+2026/02/19 11:22:46 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 11:25:26 INF [HLS] [muxer live] created (requested by 127.0.0.1:46096)
+2026/02/19 11:25:26 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 11:25:27 INF [HLS] [muxer live] created (requested by 127.0.0.1:46112)
+2026/02/19 11:25:27 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 11:36:24 INF [HLS] [muxer live] created (requested by 127.0.0.1:34066)
+2026/02/19 11:36:24 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 11:36:25 INF [HLS] [muxer live] created (requested by 127.0.0.1:34072)
+2026/02/19 11:36:25 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 12:11:10 INF [HLS] [muxer live] created (requested by 127.0.0.1:35366)
+2026/02/19 12:11:10 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 12:11:11 INF [HLS] [muxer live] created (requested by 127.0.0.1:35382)
+2026/02/19 12:11:11 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 12:12:22 INF [HLS] [muxer live] created (requested by 127.0.0.1:57764)
+2026/02/19 12:12:22 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 12:12:23 INF [HLS] [muxer live] created (requested by 127.0.0.1:50262)
+2026/02/19 12:12:23 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 14:10:06 INF [HLS] [muxer live] created (requested by 127.0.0.1:40432)
+2026/02/19 14:10:06 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 14:10:07 INF [HLS] [muxer live] created (requested by 127.0.0.1:40440)
+2026/02/19 14:10:07 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 14:11:46 INF [HLS] [muxer live] created (requested by 127.0.0.1:41420)
+2026/02/19 14:11:46 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 14:11:47 INF [HLS] [muxer live] created (requested by 127.0.0.1:41430)
+2026/02/19 14:11:47 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 14:13:52 INF [HLS] [muxer live] created (requested by 127.0.0.1:47480)
+2026/02/19 14:13:52 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 14:13:53 INF [HLS] [muxer live] created (requested by 127.0.0.1:47494)
+2026/02/19 14:13:53 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 14:18:44 INF [HLS] [muxer live] created (requested by 127.0.0.1:49518)
+2026/02/19 14:18:44 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 14:18:45 INF [HLS] [muxer live] created (requested by 127.0.0.1:49530)
+2026/02/19 14:18:45 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 14:21:22 INF [HLS] [muxer live] created (requested by 127.0.0.1:54796)
+2026/02/19 14:21:22 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 14:21:23 INF [HLS] [muxer live] created (requested by 127.0.0.1:54806)
+2026/02/19 14:21:23 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 14:51:32 INF [HLS] [muxer live] created (requested by 127.0.0.1:38972)
+2026/02/19 14:51:32 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 14:52:35 INF [HLS] [muxer live] created (requested by 127.0.0.1:53616)
+2026/02/19 14:52:35 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'
+2026/02/19 15:00:30 INF [HLS] [muxer live] created (requested by 127.0.0.1:49752)
+2026/02/19 15:00:30 INF [HLS] [muxer live] destroyed: no stream is available on path 'live'

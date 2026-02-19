@@ -1,121 +1,326 @@
-# Escrime - Système de Streaming Automatique (Jetson Orin Nano)
+# Escrime - Système de Détection et Streaming d'Escrimes
 
-## Objectif
-Mettre en place un système de captation automatique d'une compétition d'escrime permettant :
-- la détection automatique des pistes,
-- le suivi des tireurs sur une piste sélectionnée,
-- le recadrage automatique (auto-framing),
-- l'envoi d'un flux vidéo RTSP vers un PC de streaming,
-- le pilotage à distance via une interface web.
+Système complet de détection automatique, suivi et streaming des compétitions d'escrime utilisant l'IA et la vision par ordinateur.
 
-## Matériel recommandé
-- Jetson Orin Nano :
-  - Acquisition vidéo
-  - Détection IA (person detection)
-  - Tracking multi-objets
-  - Calcul du cadrage
-  - Encodage matériel H.264
-  - Serveur RTSP
-- PC Windows :
-  - Réception du flux RTSP
-  - Streaming (OBS)
-  - Overlay graphique (score, logos)
-  - Supervision du système
+## 🎯 Objectifs principaux
 
-## Architecture (principes)
-Le système est découplé en trois blocs indépendants :
+- ✅ Détection automatique de la piste d'escrime (14m x ~2m)
+- ✅ **Identification des 2 fencers par position relative aux lignes de mise en garde** (NOUVEAU)
+- ✅ Suivi en temps réel des fencers avec IDs persistants
+- ✅ **Validation continue de la position des fencers sur les garde-lignes** (NOUVEAU)
+- ✅ Recadrage automatique (auto-framing) pour garder les 2 fencers visibles
+- ✅ Interface web de contrôle et de paramétrage temps réel
+- ✅ Streaming RTSP vers PC de montage (OBS, etc.)
 
-1) Vision
-- Capture vidéo
-- Détection des pistes
-- Détection des personnes
-- Tracking multi-objets
-- Sélection des tireurs actifs
-- Auto-framing
+## ✨ Modifications récentes (Feb 2026)
 
-2) Streaming
-- Encodage matériel NVENC
-- Diffusion RTSP
+### 🆕 Détection des fencers basée sur les lignes de mise en garde
 
-3) Contrôle
-- API REST
-- Interface web
-- Paramétrage temps réel
+Le système utilise maintenant les **lignes de mise en garde** comme référence primaire pour identifier les fencers :
 
-Cette séparation garantit robustesse et testabilité.
+**Identification simple :**
+- **Fencer 1** : détecté à **GAUCHE** de la ligne gauche (5m)
+- **Fencer 2** : détecté à **DROITE** de la ligne droite (9m)
 
-## Pipeline vidéo (flux principal)
-VideoSource (Caméra ou fichier vidéo)
-→ Détection des pistes (OpenCV)
-→ Détection personnes (YOLO pré-entraîné)
-→ Tracking multi-objets (ByteTrack)
-→ Sélection des 2 tireurs actifs
-→ Calcul zone de cadrage
-→ Lissage du mouvement
-→ Encodage H.264
-→ Serveur RTSP
-
-## Modes de fonctionnement
-- LIVE : caméra réelle, streaming actif, paramétrage en temps réel.
-- DEV : lecture de fichier, pause / frame par frame, overlays de debug.
-- CALIBRATION : détection automatique des pistes, ajustement manuel, sauvegarde des paramètres.
-
-## Front Web (Interface de contrôle)
-Fonctions principales :
-- Preview vidéo
-- Affichage des pistes détectées
-- Sélection de la piste active
-- Réglage du zoom et du lissage
-- Démarrage / arrêt de la source vidéo
-- Statistiques temps réel (FPS, latence, GPU)
-
-Le front communique via l'API REST et WebSocket pour les événements temps réel.
-
-## Organisation logicielle recommandée
-- `core/`
-  - `pipeline.py`, `state_manager.py`
-- `sources/`
-  - `camera.py`, `video_file.py`
-- `vision/`
-  - `piste_detector.py`, `person_detector.py`, `tracker.py`, `framing.py`
-- `stream/`
-  - `rtsp_server.py`, `encoder_nvenc.py`, `encoder_software.py`
-- `web/`
-  - `api.py`, `websocket.py`
-- `frontend/` (code UI)
-
-## Principes techniques clés
-- L'IA est utilisée uniquement pour détecter les personnes ; la logique métier sélectionne les tireurs.
-- La géométrie des pistes réduit les faux positifs.
-- Le système doit fonctionner en temps réel sur Jetson Orin Nano.
-- Séparation Vision / Streaming / UI pour la stabilité et la maintenabilité.
-
-## Évolutions possibles
-- Multi-pistes simultanées
-- Enregistrement automatique des matchs
-- Ajout d'un module de reconnaissance/score automatique
-- Statistiques et heatmaps de déplacement
-- Détection des phases actives (engagements)
-
-## Installation rapide (Jetson)
-- Installer les dépendances système et Python (voir `requirements.txt`).
-- Déployer les modèles IA (YOLO, ByteTrack) dans `vision/models/`.
-- Lancer le pipeline en mode DEV :
-
-```bash
-python main.py --mode DEV
+**Workflow d'initialisation :**
+```
+PISTE DÉTECTÉE  →  CALCUL GARDE-LIGNES  →  FENCERS IDENTIFIÉS  →  SUIVI
 ```
 
-- En LIVE, lancer le service RTSP puis ouvrir le flux dans OBS sur le PC Windows.
+### 🆕 Validation garde-lignes (API)
 
-## Usage
-- Utiliser l'interface web pour sélectionner la piste et régler le framing.
-- Pour forcer l'utilisation du Git/WSL depuis VSCode, ouvrir un terminal WSL intégré.
+**Endpoint** : `GET /api/guard-validation`
 
-## Contribuer
-- Fork + PR
-- Respecter la séparation des responsabilités (vision / stream / web)
-- Ajouter des tests unitaires pour la logique de sélection et le framing
+```json
+{
+  "fencer_1_on_guard": true,
+  "fencer_2_on_guard": true,
+  "both_on_guard": true,
+  "status": "✓ F1 | ✓ F2"
+}
+```
 
-## Licence
-À préciser.
+Affichage web : `⚔️ Guard Validation: ✓ F1 | ✓ F2`
+
+### 🗑️ Code nettoyé
+
+- ❌ Suppression de la méthode obsolète `_cluster_candidates_by_position()`
+- ❌ Suppression des paramètres inutilisés (`initialization_frames`, `init_stabilization`)
+- ✅ Code simplifié avec priorité stricte aux garde-lignes
+- ✅ Documentation améliorée
+
+## 🏗️ Architecture
+
+### Trois modules découplés
+
+```
+┌──────────────────────────────────────┐
+│        VIDÉO SOURCE                  │
+│   (Caméra / Fichier vidéo)           │
+└────────────────┬─────────────────────┘
+                 │
+┌────────────────▼─────────────────────┐
+│      PIPELINE VISION                 │
+│  • Détection piste (ROI)             │
+│  • Détection personnes (YOLO)        │
+│  • Identification fencers par        │
+│    position garde-lignes             │
+│  • Suivi fencers                     │
+│  • Validation garde-lignes           │
+│  • Auto-framing                      │
+└────────────────┬─────────────────────┘
+      ┌──────────┼──────────┐
+      │          │          │
+  ┌───▼────┐ ┌───▼───┐ ┌──▼──────┐
+  │STREAMING│ │API WEB│ │STATS    │
+  │ RTSP   │ │REST   │ │JSON     │
+  │ NVENC  │ │WS     │ │         │
+  └────────┘ └───────┘ └─────────┘
+```
+
+### Structure des fichiers
+
+```
+escrime-vision-system/
+├── main.py                          # Point d'entrée
+├── core/
+│   ├── pipeline.py                  # Pipeline vision principal
+│   ├── interfaces.py                # Interfaces abstraites
+│   ├── state_manager.py             # Gestion estado (ROI, phase)
+│   └── bout_manager.py              # Logique du bout
+├── vision/
+│   ├── person_detector.py           # Détection YOLO
+│   ├── piste_detector.py            # Détection ROI
+│   ├── guard_line_detector.py       # Garde-lignes ⭐ CLEF
+│   ├── fencer_tracker.py            # Suivi 2 fencers ⭐ PRINCIPAL
+│   └── framing.py                   # Calcul cadrage
+├── sources/
+│   ├── camera.py                    # Caméra
+│   └── video_file.py                # Vidéo fichier
+├── stream/
+│   ├── encoder_nvenc.py             # Encodage NVIDIA
+│   ├── encoder_software.py          # Encodage logiciel
+│   └── rtsp_server.py               # Serveur RTSP
+├── config/
+│   ├── shared_roi.py                # Config ROI partagée
+│   ├── shared_visibility.py         # Config visibilité
+│   ├── shared_guard_lines.py        # Config garde-lignes
+│   └── pipeline_stats.json          # Stats temps réel
+├── web/
+│   ├── server.py                    # API FastAPI
+│   └── static/index.html            # Web UI
+└── tests/
+    ├── test_pipeline.py
+    ├── test_framing.py
+    └── test_tracker.py
+```
+
+## 🚀 Démarrage rapide
+
+### Installation
+```bash
+pip install -r requirements.txt
+```
+
+### Lancer le système
+```bash
+python main.py
+```
+
+### Accéder à l'interface
+```
+http://localhost:8001
+```
+
+## 📱 Interface Web - Mode d'emploi
+
+### Étape 1️⃣ : Sélection de la piste
+
+1. Cliquez sur **"📐 Draw Piste"**
+2. Dessinez le rectangle de la piste sur l'image vidéo
+3. Cliquez sur **"✓ Validate & Start"**
+
+### Étape 2️⃣ : Détection des fencers
+
+L'interface affiche :
+```
+🔨 Execution Mode: DEV | FENCER_DETECTION
+📡 Pipeline: 🟢 Running
+👥 Fencers: 2
+⚔️ Guard Validation: ✓ F1 | ✓ F2        ← Les fencers sont OK!
+📍 ROI: x: 8-1269, y: 514-552
+```
+
+Les fencers doivent être à leur position de garde (gauche pour F1, droite pour F2).
+
+### Étape 3️⃣ : Ajuster les garde-lignes (si besoin)
+
+Un panneau apparaît pendant FENCER_DETECTION :
+
+```
+⚔️ Adjust Guard Lines
+
+Left Line (5m)           Right Line (9m)
+[←] [-10px] [+10px] [→] [←] [-10px] [+10px] [→]
+[  Reset  ]              [  Reset  ]
+```
+
+Utilisez les boutons pour ajuster les positions.
+
+### Étape 4️⃣ : Suivi continu
+
+Une fois les fencers lockés, le système entre en mode **BOUT_ACTIVE** :
+- Suivi en temps réel
+- Validation garde-lignes continues
+- Auto-framing des 2 fencers
+- Streaming RTSP actif
+
+## 🔧 API REST (Ajustement temps réel)
+
+### Ajuster une garde-ligne
+```bash
+curl -X POST http://localhost:8001/api/adjust-guard-line \
+  -H "Content-Type: application/json" \
+  -d '{
+    "line": "left",
+    "offset_x": 10,
+    "tilt": 1.0
+  }'
+```
+
+Paramètres :
+- `line` : `"left"` | `"right"` | `"center"`
+- `offset_x` : pixels (positif = droite, négatif = gauche)
+- `tilt` : 1.0 = normal, <1.0 = converge, >1.0 = diverge
+
+### Récupérer l'état
+```bash
+curl http://localhost:8001/api/guard-lines-adjustments
+```
+
+Response :
+```json
+{
+  "left_offset": 10,
+  "left_tilt": 1.0,
+  "right_offset": -5,
+  "right_tilt": 1.0,
+  "center_offset": 0
+}
+```
+
+### Réinitialiser
+```bash
+curl -X POST http://localhost:8001/api/reset-guard-lines
+```
+
+### Obtenir le statut de validation
+```bash
+curl http://localhost:8001/api/guard-validation
+```
+
+## 📊 Phases du bout
+
+```
+PISTE_SELECTION
+    ↓ [Utilisateur définit le ROI]
+FENCER_DETECTION
+    ↓ [Détection des 2 fencers sur garde-lignes]
+INITIALIZING
+    ↓ [Fencers lockés, préparation match]
+BOUT_ACTIVE
+    ↓ [Suivi en temps réel]
+```
+
+## 🔍 Détails techniques
+
+### FencerTracker (`vision/fencer_tracker.py`)
+
+**Responsabilités principales :**
+1. Initialiser via `_initialize_with_guard_lines()` 
+2. Identifier Fencer 1 (gauche) et Fencer 2 (droite)
+3. Tracker avec IDs persistants (1, 2)
+4. Valider position sur garde-lignes chaque frame
+5. Calculer cadrage optimal
+
+**Méthodes clés :**
+- `update(detections, guard_line_detector)` 
+- `_initialize_with_guard_lines(detections, guard_line_detector)`
+- `validate_fencers_on_guard_lines(guard_line_detector, current_detections)`
+- `_calculate_frame_box()` pour l'auto-framing
+
+### GuardLineDetector (`vision/guard_line_detector.py`)
+
+**Responsabilités :**
+1. Calculer les positions de garde-lignes automatiquement
+2. Ajuster position/tilt temps réel
+3. Détecter si une détection est "sur" une ligne
+4. Valider proche-lignes
+
+**Positions (France) :**
+```
+0m ────────────────── start
+5m ──⚔── LEFT guard line  (Fencer 1 doit être GAUCHE)
+7m ────────────────── CENTER
+9m ──⚔── RIGHT guard line (Fencer 2 doit être DROITE)
+14m ──────────────── fin
+```
+
+## 🆘 Dépannage
+
+### Les fencers ne sont pas détectés
+
+**Vérifier :**
+1. ❓ YOLO détecte-t-il les 2 personnes ? (voir logs)
+2. ❓ Les personnes sont-elles aux positions de garde ?
+3. ❓ ROI est-il correct ? (réessayer "Draw Piste")
+
+### Garde-lignes mal positionnées
+
+**Solutions :**
+1. Utiliser boutons ±10px dans Web UI
+2. API `/api/adjust-guard-line` avec `offset_x`
+3. `/api/reset-guard-lines` pour recommencer
+
+### Fencers "sautent" pendant le suivi
+
+**Paramètres à ajuster :**
+```python
+# vision/fencer_tracker.py
+max_tracking_distance = 100.0  # px (augmenter si trop restrictif)
+dropout_tolerance = 30  # frames (augmenter pour plus de tolérance)
+```
+
+## 📈 Exemple de logs réussis
+
+```
+[GuardLineDetector] Initial guard lines: 5m=458px, 7m=638px, 9m=819px
+[FencerTracker] ✓ LOCKED 2 fencers using guard lines!
+  → Fencer 1 (LEFT): x=446 (left of 458px)
+  → Fencer 2 (RIGHT): x=927 (right of 819px)
+  → Separation: 481px
+[BoutManager] 🤺 Phase → BOUT_ACTIVE (fencers locked)
+```
+
+## 🧪 Tests
+
+```bash
+pytest tests/
+```
+
+## 🔮 Évolutions futures
+
+- [ ] Multi-pistes simultanées
+- [ ] Enregistrement automatique des matchs
+- [ ] Heatmaps de déplacements
+- [ ] Détection automatique des engagements
+- [ ] Scoring assisté par IA
+
+## 📄 Licence
+
+Propriétaire
+
+---
+
+**Version** : 2.0 (Feb 2026)
+**Dernière mise à jour** : Code nettoyé, garde-lignes intégrées
